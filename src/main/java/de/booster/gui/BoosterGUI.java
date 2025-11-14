@@ -34,41 +34,59 @@ public class BoosterGUI {
         UUID uuid = player.getUniqueId();
 
         // Glass-Panes als Hintergrund
-        ItemStack glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemStack glass = plugin.getItemsAdderManager().getGlassPane();
         ItemMeta glassMeta = glass.getItemMeta();
-        glassMeta.setDisplayName(" ");
-        glass.setItemMeta(glassMeta);
+        if (glassMeta != null) {
+            glassMeta.setDisplayName(" ");
+            glass.setItemMeta(glassMeta);
+        }
         
         // Alle Slots mit Glass füllen
         for (int i = 0; i < 54; i++) {
-            inv.setItem(i, glass);
+            inv.setItem(i, glass.clone());
         }
 
         // Übersichts-Item (Player Head) - Zeigt alle Booster-Anzahlen (Mitte oben)
-        inv.setItem(4, createOverviewItem(uuid));
+        ItemStack overviewItem = plugin.getItemsAdderManager().getOverviewItem();
+        if (overviewItem != null) {
+            inv.setItem(4, overviewItem);
+        } else {
+            inv.setItem(4, createOverviewItem(uuid));
+        }
 
         // Shop öffnen (Gold-Ingot) - Links oben
-        inv.setItem(0, createShopItem());
+        ItemStack shopButton = plugin.getItemsAdderManager().getShopButton();
+        if (shopButton == null || !plugin.getItemsAdderManager().isEnabled()) {
+            // Standard-Item verwenden wenn ItemsAdder nicht aktiv oder Item nicht gefunden
+            inv.setItem(0, createShopItem());
+        } else {
+            inv.setItem(0, shopButton);
+        }
 
         // Booster-Items in der Mitte (Reihe 3, zentriert)
-        // Break Booster (Eisen-Spitzhacke)
-        inv.setItem(20, createBoosterItem(Material.IRON_PICKAXE, BoosterType.BREAK, uuid, 
+        // Break Booster
+        ItemStack breakItem = plugin.getItemsAdderManager().getBoosterItem("break");
+        inv.setItem(20, breakItem != null ? breakItem : createBoosterItem(Material.IRON_PICKAXE, BoosterType.BREAK, uuid, 
             "§6Break-Booster", "§7Erhöht die Drop-Chance beim Abbauen"));
 
-        // Drop Booster (Eisen-Ingot)
-        inv.setItem(21, createBoosterItem(Material.IRON_INGOT, BoosterType.DROP, uuid, 
+        // Drop Booster
+        ItemStack dropItem = plugin.getItemsAdderManager().getBoosterItem("drop");
+        inv.setItem(21, dropItem != null ? dropItem : createBoosterItem(Material.IRON_INGOT, BoosterType.DROP, uuid, 
             "§6Drop-Booster", "§7Erhöht die Drop-Chance"));
 
-        // Fly Booster (Feder)
-        inv.setItem(22, createBoosterItem(Material.FEATHER, BoosterType.FLY, uuid, 
+        // Fly Booster
+        ItemStack flyItem = plugin.getItemsAdderManager().getBoosterItem("fly");
+        inv.setItem(22, flyItem != null ? flyItem : createBoosterItem(Material.FEATHER, BoosterType.FLY, uuid, 
             "§6Fly-Booster", "§7Ermöglicht das Fliegen"));
 
-        // Mob Booster (Knochen)
-        inv.setItem(23, createBoosterItem(Material.BONE, BoosterType.MOB, uuid, 
+        // Mob Booster
+        ItemStack mobItem = plugin.getItemsAdderManager().getBoosterItem("mob");
+        inv.setItem(23, mobItem != null ? mobItem : createBoosterItem(Material.BONE, BoosterType.MOB, uuid, 
             "§6Mob-Booster", "§7Erhöht die Drop-Chance von Mobs"));
 
-        // XP Booster (Erfahrungsflasche)
-        inv.setItem(24, createBoosterItem(Material.EXPERIENCE_BOTTLE, BoosterType.XP, uuid, 
+        // XP Booster
+        ItemStack xpItem = plugin.getItemsAdderManager().getBoosterItem("xp");
+        inv.setItem(24, xpItem != null ? xpItem : createBoosterItem(Material.EXPERIENCE_BOTTLE, BoosterType.XP, uuid, 
             "§6XP-Booster", "§7Erhöht die erhaltene Erfahrung"));
 
         player.openInventory(inv);

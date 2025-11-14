@@ -91,6 +91,17 @@ public class GUIListener implements Listener {
                 return;
             }
             
+            // Zurück-Button
+            if (clicked == Material.ARROW) {
+                new BoosterGUI(plugin, player).open();
+                return;
+            }
+            
+            // Guthaben-Item ignorieren
+            if (clicked == Material.GOLD_INGOT && event.getSlot() == 4) {
+                return;
+            }
+            
             BoosterType type = getBoosterTypeFromMaterial(clicked);
             
             if (type != null) {

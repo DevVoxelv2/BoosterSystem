@@ -4,7 +4,7 @@ main: de.booster.BoosterPlugin
 api-version: 1.21
 author: DerGamer09
 description: Ein Plugin für Booster-Systeme
-softdepend: [Vault]
+softdepend: [Vault, ItemsAdder]
 
 commands:
   booster:

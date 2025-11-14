@@ -1,5 +1,22 @@
 # BoosterPlugin Konfiguration
 
+# ItemsAdder Support (für Custom Items/GUIs)
+itemsadder:
+  enabled: false
+  # Namespace für Custom Items (z.B. "booster:break_booster")
+  # Leer lassen für Standard Minecraft Items
+  items:
+    glass: ""
+    overview: ""
+    shop-button: ""
+    back-button: ""
+    balance: ""
+    break: ""
+    drop: ""
+    fly: ""
+    mob: ""
+    xp: ""
+
 # Booster-Dauer in Sekunden
 booster-duration: 3600
 

@@ -63,5 +63,13 @@ public class ConfigManager {
     public int getBonusBoosterCooldownDays() {
         return config.getInt("bonusbooster.cooldown-days", 2);
     }
+
+    public boolean isItemsAdderEnabled() {
+        return config.getBoolean("itemsadder.enabled", false);
+    }
+
+    public String getItemsAdderItem(String key) {
+        return config.getString("itemsadder.items." + key, "");
+    }
 }
 
