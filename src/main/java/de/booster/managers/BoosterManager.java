@@ -17,12 +17,14 @@ public class BoosterManager {
     private final BoosterPlugin plugin;
     private final Map<UUID, Map<BoosterType, Integer>> playerBoosters;
     private final Map<UUID, Map<BoosterType, Long>> activeBoosters;
+    private final Map<UUID, Long> bonusBoosterCooldowns;
     private final File dataFile;
 
     public BoosterManager(BoosterPlugin plugin) {
         this.plugin = plugin;
         this.playerBoosters = new HashMap<>();
         this.activeBoosters = new HashMap<>();
+        this.bonusBoosterCooldowns = new HashMap<>();
         this.dataFile = new File(plugin.getDataFolder(), "data.yml");
         
         loadData();
@@ -106,6 +108,36 @@ public class BoosterManager {
         }
     }
 
+    public boolean canUseBonusBooster(UUID uuid) {
+        if (!bonusBoosterCooldowns.containsKey(uuid)) {
+            return true;
+        }
+        
+        long lastUsed = bonusBoosterCooldowns.get(uuid);
+        long cooldownDays = plugin.getConfigManager().getBonusBoosterCooldownDays();
+        long cooldownMillis = cooldownDays * 24L * 60L * 60L * 1000L;
+        
+        return System.currentTimeMillis() >= (lastUsed + cooldownMillis);
+    }
+
+    public long getBonusBoosterCooldownRemaining(UUID uuid) {
+        if (!bonusBoosterCooldowns.containsKey(uuid)) {
+            return 0;
+        }
+        
+        long lastUsed = bonusBoosterCooldowns.get(uuid);
+        long cooldownDays = plugin.getConfigManager().getBonusBoosterCooldownDays();
+        long cooldownMillis = cooldownDays * 24L * 60L * 60L * 1000L;
+        long nextUseTime = lastUsed + cooldownMillis;
+        long remaining = nextUseTime - System.currentTimeMillis();
+        
+        return Math.max(0, remaining);
+    }
+
+    public void setBonusBoosterUsed(UUID uuid) {
+        bonusBoosterCooldowns.put(uuid, System.currentTimeMillis());
+    }
+
     private void startBoosterCheckTask() {
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             for (UUID uuid : new HashSet<>(activeBoosters.keySet())) {
@@ -127,31 +159,59 @@ public class BoosterManager {
         FileConfiguration config = YamlConfiguration.loadConfiguration(dataFile);
         
         for (String key : config.getKeys(false)) {
-            UUID uuid = UUID.fromString(key);
-            Map<BoosterType, Integer> boosters = new HashMap<>();
-            
-            for (String typeStr : config.getConfigurationSection(key).getKeys(false)) {
-                try {
-                    BoosterType type = BoosterType.valueOf(typeStr.toUpperCase());
-                    int amount = config.getInt(key + "." + typeStr);
-                    boosters.put(type, amount);
-                } catch (IllegalArgumentException e) {
-                    // Ungültiger Typ, überspringen
+            if (key.equals("cooldowns")) {
+                // Cooldown-Daten laden
+                if (config.isConfigurationSection("cooldowns")) {
+                    for (String uuidStr : config.getConfigurationSection("cooldowns").getKeys(false)) {
+                        try {
+                            UUID uuid = UUID.fromString(uuidStr);
+                            long lastUsed = config.getLong("cooldowns." + uuidStr);
+                            bonusBoosterCooldowns.put(uuid, lastUsed);
+                        } catch (IllegalArgumentException e) {
+                            // Ungültige UUID, überspringen
+                        }
+                    }
                 }
+                continue;
             }
             
-            playerBoosters.put(uuid, boosters);
+            try {
+                UUID uuid = UUID.fromString(key);
+                Map<BoosterType, Integer> boosters = new HashMap<>();
+                
+                if (config.isConfigurationSection(key)) {
+                    for (String typeStr : config.getConfigurationSection(key).getKeys(false)) {
+                        try {
+                            BoosterType type = BoosterType.valueOf(typeStr.toUpperCase());
+                            int amount = config.getInt(key + "." + typeStr);
+                            boosters.put(type, amount);
+                        } catch (IllegalArgumentException e) {
+                            // Ungültiger Typ, überspringen
+                        }
+                    }
+                }
+                
+                playerBoosters.put(uuid, boosters);
+            } catch (IllegalArgumentException e) {
+                // Keine UUID, überspringen
+            }
         }
     }
 
     public void saveAllData() {
         FileConfiguration config = new YamlConfiguration();
         
+        // Booster-Daten speichern
         for (Map.Entry<UUID, Map<BoosterType, Integer>> entry : playerBoosters.entrySet()) {
             String uuidStr = entry.getKey().toString();
             for (Map.Entry<BoosterType, Integer> boosterEntry : entry.getValue().entrySet()) {
                 config.set(uuidStr + "." + boosterEntry.getKey().name().toLowerCase(), boosterEntry.getValue());
             }
+        }
+        
+        // Cooldown-Daten speichern
+        for (Map.Entry<UUID, Long> entry : bonusBoosterCooldowns.entrySet()) {
+            config.set("cooldowns." + entry.getKey().toString(), entry.getValue());
         }
         
         try {

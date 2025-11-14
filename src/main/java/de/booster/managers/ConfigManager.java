@@ -42,5 +42,21 @@ public class ConfigManager {
         String message = config.getString("messages." + key, "");
         return ChatColor.translateAlternateColorCodes('&', message);
     }
+
+    public int getBonusBoosterMinAmount() {
+        return config.getInt("bonusbooster.min-amount", 1);
+    }
+
+    public int getBonusBoosterMaxAmount() {
+        return config.getInt("bonusbooster.max-amount", 3);
+    }
+
+    public java.util.List<String> getBonusBoosterPossibleTypes() {
+        return config.getStringList("bonusbooster.possible-types");
+    }
+
+    public int getBonusBoosterCooldownDays() {
+        return config.getInt("bonusbooster.cooldown-days", 2);
+    }
 }
 

@@ -10,6 +10,18 @@ multipliers:
   xp: 2.0
   mob: 2.0
 
+# Bonusbooster Einstellungen
+bonusbooster:
+  min-amount: 1
+  max-amount: 3
+  # Cooldown in Tagen (z.B. 2 = 2 Tage)
+  cooldown-days: 2
+  # Mögliche Booster-Typen für Bonusbooster (alle Typen wenn leer)
+  # Verfügbare Typen: BREAK, DROP, FLY, MOB, XP
+  possible-types: []
+  # Oder spezifische Typen angeben:
+  # possible-types: [BREAK, DROP, XP]
+
 # Shop-Preise
 shop:
   break:
@@ -44,4 +56,5 @@ messages:
   config-reloaded: "&aKonfiguration wurde neu geladen!"
   not-enough-money: "&cDu hast nicht genug Geld!"
   purchase-success: "&aDu hast &6{type}&a-Booster gekauft!"
+  bonusbooster-cooldown: "&cDu musst noch &6{time}&c warten, bevor du den Bonusbooster erneut verwenden kannst!"
 
