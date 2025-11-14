@@ -28,24 +28,36 @@ public class ShopGUI {
     public void open() {
         Inventory inv = Bukkit.createInventory(null, 54, "§6Booster §7- §aShop");
 
-        // Break Booster (Eisen-Spitzhacke)
-        inv.setItem(10, createShopItem(Material.IRON_PICKAXE, BoosterType.BREAK, 
+        // Glass-Panes als Hintergrund
+        ItemStack glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemMeta glassMeta = glass.getItemMeta();
+        glassMeta.setDisplayName(" ");
+        glass.setItemMeta(glassMeta);
+        
+        // Alle Slots mit Glass füllen
+        for (int i = 0; i < 54; i++) {
+            inv.setItem(i, glass);
+        }
+
+        // Booster-Items zentriert in Reihe 2 und 3
+        // Break Booster (Eisen-Spitzhacke) - Reihe 2, Mitte
+        inv.setItem(11, createShopItem(Material.IRON_PICKAXE, BoosterType.BREAK, 
             "§6Break-Booster", "§7Erhöht die Drop-Chance beim Abbauen"));
 
-        // Drop Booster (Truhe)
-        inv.setItem(12, createShopItem(Material.CHEST, BoosterType.DROP, 
+        // Drop Booster (Truhe) - Reihe 2, Mitte
+        inv.setItem(13, createShopItem(Material.CHEST, BoosterType.DROP, 
             "§6Drop-Booster", "§7Erhöht die Drop-Chance"));
 
-        // Fly Booster (Feder)
-        inv.setItem(14, createShopItem(Material.FEATHER, BoosterType.FLY, 
+        // Fly Booster (Feder) - Reihe 2, Mitte
+        inv.setItem(15, createShopItem(Material.FEATHER, BoosterType.FLY, 
             "§6Fly-Booster", "§7Ermöglicht das Fliegen"));
 
-        // Mob Booster (Zombie-Kopf)
-        inv.setItem(16, createShopItem(Material.ZOMBIE_HEAD, BoosterType.MOB, 
+        // Mob Booster (Zombie-Kopf) - Reihe 3, Mitte
+        inv.setItem(20, createShopItem(Material.ZOMBIE_HEAD, BoosterType.MOB, 
             "§6Mob-Booster", "§7Erhöht die Drop-Chance von Mobs"));
 
-        // XP Booster (Erfahrungsflasche)
-        inv.setItem(28, createShopItem(Material.EXPERIENCE_BOTTLE, BoosterType.XP, 
+        // XP Booster (Erfahrungsflasche) - Reihe 3, Mitte
+        inv.setItem(22, createShopItem(Material.EXPERIENCE_BOTTLE, BoosterType.XP, 
             "§6XP-Booster", "§7Erhöht die erhaltene Erfahrung"));
 
         player.openInventory(inv);

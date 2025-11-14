@@ -40,6 +40,11 @@ public class GUIListener implements Listener {
 
             Material clicked = event.getCurrentItem().getType();
             
+            // Glass-Panes ignorieren
+            if (isGlassPane(clicked)) {
+                return;
+            }
+            
             // Shop öffnen
             if (clicked == Material.GOLD_INGOT) {
                 new ShopGUI(plugin, player).open();
@@ -58,7 +63,7 @@ public class GUIListener implements Listener {
                     if (boosterManager.activateBooster(player, type)) {
                         String message = plugin.getConfigManager().getRawMessage("booster-activated")
                                 .replace("{type}", type.name());
-                        player.sendMessage(plugin.getConfigManager().getMessage("prefix") + message);
+                        player.sendMessage(plugin.getConfigManager().getPrefix() + message);
                         
                         if (type == BoosterType.FLY) {
                             player.setAllowFlight(true);
@@ -80,6 +85,12 @@ public class GUIListener implements Listener {
             }
 
             Material clicked = event.getCurrentItem().getType();
+            
+            // Glass-Panes ignorieren
+            if (isGlassPane(clicked)) {
+                return;
+            }
+            
             BoosterType type = getBoosterTypeFromMaterial(clicked);
             
             if (type != null) {
@@ -108,7 +119,7 @@ public class GUIListener implements Listener {
                 
                 String message = plugin.getConfigManager().getRawMessage("purchase-success")
                         .replace("{type}", type.name());
-                player.sendMessage(plugin.getConfigManager().getMessage("prefix") + message);
+                player.sendMessage(plugin.getConfigManager().getPrefix() + message);
                 
                 // GUI aktualisieren
                 new ShopGUI(plugin, player).open();
@@ -134,6 +145,13 @@ public class GUIListener implements Listener {
             default:
                 return null;
         }
+    }
+    
+    private boolean isGlassPane(Material material) {
+        return material == Material.GRAY_STAINED_GLASS_PANE || 
+               material == Material.BLACK_STAINED_GLASS_PANE ||
+               material == Material.WHITE_STAINED_GLASS_PANE ||
+               material.name().contains("STAINED_GLASS_PANE");
     }
 }
 

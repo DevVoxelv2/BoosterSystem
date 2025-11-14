@@ -31,6 +31,11 @@ public class ConfigManager {
         return config.getInt("shop." + type.toLowerCase() + ".price", 1000);
     }
 
+    public String getPrefix() {
+        String prefix = config.getString("messages.prefix", "&8[&6Booster&8] &7");
+        return ChatColor.translateAlternateColorCodes('&', prefix);
+    }
+
     public String getMessage(String key) {
         String prefix = config.getString("messages.prefix", "&8[&6Booster&8] &7");
         String message = config.getString("messages." + key, "");

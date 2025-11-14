@@ -44,7 +44,7 @@ public class BonusBoosterCommand implements CommandExecutor {
             String timeString = formatTime(remainingMillis);
             String message = plugin.getConfigManager().getRawMessage("bonusbooster-cooldown")
                     .replace("{time}", timeString);
-            player.sendMessage(plugin.getConfigManager().getMessage("prefix") + message);
+            player.sendMessage(plugin.getConfigManager().getPrefix() + message);
             return true;
         }
 
@@ -79,7 +79,7 @@ public class BonusBoosterCommand implements CommandExecutor {
         String message = plugin.getConfigManager().getRawMessage("booster-received")
                 .replace("{amount}", String.valueOf(amount))
                 .replace("{type}", randomType.name());
-        player.sendMessage(plugin.getConfigManager().getMessage("prefix") + message);
+        player.sendMessage(plugin.getConfigManager().getPrefix() + message);
         player.sendMessage("§6Du hast einen Bonusbooster erhalten!");
 
         return true;

@@ -33,31 +33,43 @@ public class BoosterGUI {
 
         UUID uuid = player.getUniqueId();
 
-        // Übersichts-Item (Player Head) - Zeigt alle Booster-Anzahlen
+        // Glass-Panes als Hintergrund
+        ItemStack glass = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+        ItemMeta glassMeta = glass.getItemMeta();
+        glassMeta.setDisplayName(" ");
+        glass.setItemMeta(glassMeta);
+        
+        // Alle Slots mit Glass füllen
+        for (int i = 0; i < 54; i++) {
+            inv.setItem(i, glass);
+        }
+
+        // Übersichts-Item (Player Head) - Zeigt alle Booster-Anzahlen (Mitte oben)
         inv.setItem(4, createOverviewItem(uuid));
 
+        // Shop öffnen (Gold-Ingot) - Links oben
+        inv.setItem(0, createShopItem());
+
+        // Booster-Items in der Mitte (Reihe 3, zentriert)
         // Break Booster (Eisen-Spitzhacke)
-        inv.setItem(18, createBoosterItem(Material.IRON_PICKAXE, BoosterType.BREAK, uuid, 
+        inv.setItem(20, createBoosterItem(Material.IRON_PICKAXE, BoosterType.BREAK, uuid, 
             "§6Break-Booster", "§7Erhöht die Drop-Chance beim Abbauen"));
 
         // Drop Booster (Eisen-Ingot)
-        inv.setItem(19, createBoosterItem(Material.IRON_INGOT, BoosterType.DROP, uuid, 
+        inv.setItem(21, createBoosterItem(Material.IRON_INGOT, BoosterType.DROP, uuid, 
             "§6Drop-Booster", "§7Erhöht die Drop-Chance"));
 
         // Fly Booster (Feder)
-        inv.setItem(20, createBoosterItem(Material.FEATHER, BoosterType.FLY, uuid, 
+        inv.setItem(22, createBoosterItem(Material.FEATHER, BoosterType.FLY, uuid, 
             "§6Fly-Booster", "§7Ermöglicht das Fliegen"));
 
         // Mob Booster (Knochen)
-        inv.setItem(21, createBoosterItem(Material.BONE, BoosterType.MOB, uuid, 
+        inv.setItem(23, createBoosterItem(Material.BONE, BoosterType.MOB, uuid, 
             "§6Mob-Booster", "§7Erhöht die Drop-Chance von Mobs"));
 
         // XP Booster (Erfahrungsflasche)
-        inv.setItem(22, createBoosterItem(Material.EXPERIENCE_BOTTLE, BoosterType.XP, uuid, 
+        inv.setItem(24, createBoosterItem(Material.EXPERIENCE_BOTTLE, BoosterType.XP, uuid, 
             "§6XP-Booster", "§7Erhöht die erhaltene Erfahrung"));
-
-        // Shop öffnen (Gold-Ingot)
-        inv.setItem(3, createShopItem());
 
         player.openInventory(inv);
     }

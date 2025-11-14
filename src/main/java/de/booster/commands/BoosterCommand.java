@@ -223,7 +223,7 @@ public class BoosterCommand implements CommandExecutor, TabCompleter {
         String message = plugin.getConfigManager().getRawMessage("booster-received")
                 .replace("{amount}", String.valueOf(amount))
                 .replace("{type}", type.name());
-        target.sendMessage(plugin.getConfigManager().getMessage("prefix") + message);
+        target.sendMessage(plugin.getConfigManager().getPrefix() + message);
         sender.sendMessage("§aDu hast " + target.getName() + " " + amount + " " + type.name() + "-Booster gesendet!");
     }
 
@@ -231,7 +231,7 @@ public class BoosterCommand implements CommandExecutor, TabCompleter {
         if (boosterManager.activateBooster(player, type)) {
             String message = plugin.getConfigManager().getRawMessage("booster-activated")
                     .replace("{type}", type.name());
-            player.sendMessage(plugin.getConfigManager().getMessage("prefix") + message);
+            player.sendMessage(plugin.getConfigManager().getPrefix() + message);
             
             if (type == BoosterType.FLY) {
                 player.setAllowFlight(true);
@@ -240,7 +240,7 @@ public class BoosterCommand implements CommandExecutor, TabCompleter {
         } else {
             String message = plugin.getConfigManager().getRawMessage("no-boosters")
                     .replace("{type}", type.name());
-            player.sendMessage(plugin.getConfigManager().getMessage("prefix") + message);
+            player.sendMessage(plugin.getConfigManager().getPrefix() + message);
         }
     }
 
