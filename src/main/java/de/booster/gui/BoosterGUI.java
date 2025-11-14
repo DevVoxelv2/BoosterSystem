@@ -9,9 +9,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class BoosterGUI {
@@ -27,46 +29,60 @@ public class BoosterGUI {
     }
 
     public void open() {
-        Inventory inv = Bukkit.createInventory(null, 54, "§6Booster Menü");
+        Inventory inv = Bukkit.createInventory(null, 54, "§cBooster §7- §aÜbersicht");
 
         UUID uuid = player.getUniqueId();
 
-        // Break Booster
-        inv.setItem(10, createBoosterItem(Material.DIAMOND_PICKAXE, BoosterType.BREAK, uuid, "§6Break-Booster", "§7Erhöht die Drop-Chance beim Abbauen"));
+        // Übersichts-Item (Player Head) - Zeigt alle Booster-Anzahlen
+        inv.setItem(4, createOverviewItem(uuid));
 
-        // Drop Booster
-        inv.setItem(12, createBoosterItem(Material.CHEST, BoosterType.DROP, uuid, "§6Drop-Booster", "§7Erhöht die Drop-Chance"));
+        // Break Booster (Eisen-Spitzhacke)
+        inv.setItem(18, createBoosterItem(Material.IRON_PICKAXE, BoosterType.BREAK, uuid, 
+            "§6Break-Booster", "§7Erhöht die Drop-Chance beim Abbauen"));
 
-        // Fly Booster
-        inv.setItem(14, createBoosterItem(Material.FEATHER, BoosterType.FLY, uuid, "§6Fly-Booster", "§7Ermöglicht das Fliegen"));
+        // Drop Booster (Eisen-Ingot)
+        inv.setItem(19, createBoosterItem(Material.IRON_INGOT, BoosterType.DROP, uuid, 
+            "§6Drop-Booster", "§7Erhöht die Drop-Chance"));
 
-        // Mob Booster
-        inv.setItem(16, createBoosterItem(Material.ZOMBIE_HEAD, BoosterType.MOB, uuid, "§6Mob-Booster", "§7Erhöht die Drop-Chance von Mobs"));
+        // Fly Booster (Feder)
+        inv.setItem(20, createBoosterItem(Material.FEATHER, BoosterType.FLY, uuid, 
+            "§6Fly-Booster", "§7Ermöglicht das Fliegen"));
 
-        // XP Booster
-        inv.setItem(28, createBoosterItem(Material.EXPERIENCE_BOTTLE, BoosterType.XP, uuid, "§6XP-Booster", "§7Erhöht die erhaltene Erfahrung"));
+        // Mob Booster (Knochen)
+        inv.setItem(21, createBoosterItem(Material.BONE, BoosterType.MOB, uuid, 
+            "§6Mob-Booster", "§7Erhöht die Drop-Chance von Mobs"));
 
-        // Shop öffnen
-        ItemStack shopItem = new ItemStack(Material.EMERALD);
-        ItemMeta shopMeta = shopItem.getItemMeta();
-        shopMeta.setDisplayName("§aBooster Shop");
-        List<String> shopLore = new ArrayList<>();
-        shopLore.add("§7Klicke hier, um den Shop zu öffnen");
-        shopMeta.setLore(shopLore);
-        shopItem.setItemMeta(shopMeta);
-        inv.setItem(40, shopItem);
+        // XP Booster (Erfahrungsflasche)
+        inv.setItem(22, createBoosterItem(Material.EXPERIENCE_BOTTLE, BoosterType.XP, uuid, 
+            "§6XP-Booster", "§7Erhöht die erhaltene Erfahrung"));
 
-        // Status anzeigen
-        ItemStack statusItem = new ItemStack(Material.BOOK);
-        ItemMeta statusMeta = statusItem.getItemMeta();
-        statusMeta.setDisplayName("§eBooster Status");
-        List<String> statusLore = new ArrayList<>();
-        statusLore.add("§7Zeige alle deine Booster");
-        statusMeta.setLore(statusLore);
-        statusItem.setItemMeta(statusMeta);
-        inv.setItem(49, statusItem);
+        // Shop öffnen (Gold-Ingot)
+        inv.setItem(3, createShopItem());
 
         player.openInventory(inv);
+    }
+
+    private ItemStack createOverviewItem(UUID uuid) {
+        ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta meta = (SkullMeta) item.getItemMeta();
+        meta.setDisplayName("§6Anzahl der Booster:");
+        
+        List<String> lore = new ArrayList<>();
+        lore.add("§8─────────────────");
+        
+        Map<BoosterType, Integer> allBoosters = boosterManager.getAllBoosters(uuid);
+        
+        lore.add("§7Break-Booster: §6" + allBoosters.getOrDefault(BoosterType.BREAK, 0));
+        lore.add("§7Drop-Booster: §6" + allBoosters.getOrDefault(BoosterType.DROP, 0));
+        lore.add("§7Fly-Booster: §6" + allBoosters.getOrDefault(BoosterType.FLY, 0));
+        lore.add("§7Mob-Booster: §6" + allBoosters.getOrDefault(BoosterType.MOB, 0));
+        lore.add("§7XP-Booster: §6" + allBoosters.getOrDefault(BoosterType.XP, 0));
+        
+        lore.add("§8─────────────────");
+        
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return item;
     }
 
     private ItemStack createBoosterItem(Material material, BoosterType type, UUID uuid, String name, String description) {
@@ -76,25 +92,59 @@ public class BoosterGUI {
 
         List<String> lore = new ArrayList<>();
         lore.add(description);
-        lore.add("");
+        lore.add("§8─────────────────");
         
         int count = boosterManager.getBoosterCount(uuid, type);
         boolean active = boosterManager.isBoosterActive(uuid, type);
         
         lore.add("§7Anzahl: §6" + count);
         lore.add(active ? "§aStatus: §aAKTIV" : "§7Status: §cInaktiv");
-        lore.add("");
+        lore.add("§8─────────────────");
         
         if (count > 0) {
-            lore.add("§aLinksklick: §7Booster aktivieren");
+            String typeName = getTypeName(type);
+            lore.add("§aKlicke, um einen " + typeName + " zu aktivieren");
         } else {
-            lore.add("§cDu hast keine " + type.name() + "-Booster!");
+            String typeName = getTypeName(type);
+            lore.add("§cDu hast keine " + typeName + "!");
             lore.add("§7Besuche den Shop, um welche zu kaufen");
         }
 
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
+    }
+
+    private ItemStack createShopItem() {
+        ItemStack item = new ItemStack(Material.GOLD_INGOT);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("§6Shop");
+        
+        List<String> lore = new ArrayList<>();
+        lore.add("§8─────────────────");
+        lore.add("§7Zum Shop");
+        lore.add("§8─────────────────");
+        
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private String getTypeName(BoosterType type) {
+        switch (type) {
+            case BREAK:
+                return "Break-Booster";
+            case DROP:
+                return "Drop-Booster";
+            case FLY:
+                return "Fly-Booster";
+            case MOB:
+                return "Mob-Booster";
+            case XP:
+                return "XP-Booster";
+            default:
+                return type.name() + "-Booster";
+        }
     }
 }
 

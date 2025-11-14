@@ -31,7 +31,7 @@ public class GUIListener implements Listener {
         Player player = (Player) event.getWhoClicked();
         String title = event.getView().getTitle();
 
-        if (title.equals("§6Booster Menü")) {
+        if (title.equals("§cBooster §7- §aÜbersicht")) {
             event.setCancelled(true);
             
             if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
@@ -41,15 +41,13 @@ public class GUIListener implements Listener {
             Material clicked = event.getCurrentItem().getType();
             
             // Shop öffnen
-            if (clicked == Material.EMERALD) {
+            if (clicked == Material.GOLD_INGOT) {
                 new ShopGUI(plugin, player).open();
                 return;
             }
 
-            // Status anzeigen
-            if (clicked == Material.BOOK) {
-                player.closeInventory();
-                player.performCommand("booster status");
+            // Übersichts-Item (Player Head) - keine Aktion
+            if (clicked == Material.PLAYER_HEAD) {
                 return;
             }
 
@@ -74,7 +72,7 @@ public class GUIListener implements Listener {
                     player.sendMessage("§cDu hast keine " + type.name() + "-Booster!");
                 }
             }
-        } else if (title.equals("§6Booster Shop")) {
+        } else if (title.equals("§6Booster §7- §aShop")) {
             event.setCancelled(true);
             
             if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
@@ -120,13 +118,16 @@ public class GUIListener implements Listener {
 
     private BoosterType getBoosterTypeFromMaterial(Material material) {
         switch (material) {
+            case IRON_PICKAXE:
             case DIAMOND_PICKAXE:
                 return BoosterType.BREAK;
             case CHEST:
+            case IRON_INGOT:
                 return BoosterType.DROP;
             case FEATHER:
                 return BoosterType.FLY;
             case ZOMBIE_HEAD:
+            case BONE:
                 return BoosterType.MOB;
             case EXPERIENCE_BOTTLE:
                 return BoosterType.XP;

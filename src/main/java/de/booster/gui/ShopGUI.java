@@ -26,22 +26,27 @@ public class ShopGUI {
     }
 
     public void open() {
-        Inventory inv = Bukkit.createInventory(null, 54, "§6Booster Shop");
+        Inventory inv = Bukkit.createInventory(null, 54, "§6Booster §7- §aShop");
 
-        // Break Booster
-        inv.setItem(10, createShopItem(Material.DIAMOND_PICKAXE, BoosterType.BREAK, "§6Break-Booster", "§7Erhöht die Drop-Chance beim Abbauen"));
+        // Break Booster (Eisen-Spitzhacke)
+        inv.setItem(10, createShopItem(Material.IRON_PICKAXE, BoosterType.BREAK, 
+            "§6Break-Booster", "§7Erhöht die Drop-Chance beim Abbauen"));
 
-        // Drop Booster
-        inv.setItem(12, createShopItem(Material.CHEST, BoosterType.DROP, "§6Drop-Booster", "§7Erhöht die Drop-Chance"));
+        // Drop Booster (Truhe)
+        inv.setItem(12, createShopItem(Material.CHEST, BoosterType.DROP, 
+            "§6Drop-Booster", "§7Erhöht die Drop-Chance"));
 
-        // Fly Booster
-        inv.setItem(14, createShopItem(Material.FEATHER, BoosterType.FLY, "§6Fly-Booster", "§7Ermöglicht das Fliegen"));
+        // Fly Booster (Feder)
+        inv.setItem(14, createShopItem(Material.FEATHER, BoosterType.FLY, 
+            "§6Fly-Booster", "§7Ermöglicht das Fliegen"));
 
-        // Mob Booster
-        inv.setItem(16, createShopItem(Material.ZOMBIE_HEAD, BoosterType.MOB, "§6Mob-Booster", "§7Erhöht die Drop-Chance von Mobs"));
+        // Mob Booster (Zombie-Kopf)
+        inv.setItem(16, createShopItem(Material.ZOMBIE_HEAD, BoosterType.MOB, 
+            "§6Mob-Booster", "§7Erhöht die Drop-Chance von Mobs"));
 
-        // XP Booster
-        inv.setItem(28, createShopItem(Material.EXPERIENCE_BOTTLE, BoosterType.XP, "§6XP-Booster", "§7Erhöht die erhaltene Erfahrung"));
+        // XP Booster (Erfahrungsflasche)
+        inv.setItem(28, createShopItem(Material.EXPERIENCE_BOTTLE, BoosterType.XP, 
+            "§6XP-Booster", "§7Erhöht die erhaltene Erfahrung"));
 
         player.openInventory(inv);
     }
@@ -53,12 +58,20 @@ public class ShopGUI {
 
         List<String> lore = new ArrayList<>();
         lore.add(description);
-        lore.add("");
+        lore.add("§8─────────────────");
         
         int price = plugin.getConfigManager().getShopPrice(type.name().toLowerCase());
+        double balance = plugin.getEconomyManager().getBalance(player);
+        
         lore.add("§7Preis: §6" + plugin.getEconomyManager().format(price));
-        lore.add("");
-        lore.add("§aLinksklick: §7Kaufen");
+        lore.add("§7Dein Guthaben: §6" + plugin.getEconomyManager().format(balance));
+        lore.add("§8─────────────────");
+        
+        if (balance >= price) {
+            lore.add("§aZum Kaufen anklicken");
+        } else {
+            lore.add("§cDu hast nicht genug Geld!");
+        }
 
         meta.setLore(lore);
         item.setItemMeta(meta);
