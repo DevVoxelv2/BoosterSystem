@@ -1,0 +1,61 @@
+name: BoosterPlugin
+version: '${project.version}'
+main: de.booster.BoosterPlugin
+api-version: 1.21
+author: BoosterDev
+description: Ein Plugin für Booster-Systeme
+
+commands:
+  booster:
+    description: Hauptcommand für das Booster-System
+    usage: /<command> [subcommand]
+    aliases: [b]
+    permission: booster.use
+  bonusbooster:
+    description: Gibt dir einen Bonusbooster
+    usage: /<command>
+    aliases: [bb]
+    permission: booster.bonus
+
+permissions:
+  booster.*:
+    description: Alle Booster-Berechtigungen
+    default: op
+    children:
+      booster.use: true
+      booster.buy: true
+      booster.break: true
+      booster.drop: true
+      booster.fly: true
+      booster.mob: true
+      booster.xp: true
+      booster.bonus: true
+      booster.admin: true
+  booster.use:
+    description: Booster-GUI verwenden
+    default: true
+  booster.buy:
+    description: Booster-Shop verwenden
+    default: true
+  booster.break:
+    description: Break-Booster aktivieren
+    default: true
+  booster.drop:
+    description: Drop-Booster aktivieren
+    default: true
+  booster.fly:
+    description: Fly-Booster aktivieren
+    default: true
+  booster.mob:
+    description: Mob-Booster aktivieren
+    default: true
+  booster.xp:
+    description: XP-Booster aktivieren
+    default: true
+  booster.bonus:
+    description: Bonusbooster erhalten
+    default: true
+  booster.admin:
+    description: Admin-Commands verwenden
+    default: op
+

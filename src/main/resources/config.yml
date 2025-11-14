@@ -1,0 +1,47 @@
+# BoosterPlugin Konfiguration
+
+# Booster-Dauer in Sekunden
+booster-duration: 3600
+
+# Booster-Multiplikatoren
+multipliers:
+  break: 2.0
+  drop: 2.0
+  xp: 2.0
+  mob: 2.0
+
+# Shop-Preise
+shop:
+  break:
+    price: 1000
+    currency: MONEY
+  drop:
+    price: 1000
+    currency: MONEY
+  fly:
+    price: 2000
+    currency: MONEY
+  mob:
+    price: 1500
+    currency: MONEY
+  xp:
+    price: 1200
+    currency: MONEY
+
+# Nachrichten
+messages:
+  prefix: "&8[&6Booster&8] &7"
+  no-permission: "&cDu hast keine Berechtigung für diesen Command!"
+  player-not-found: "&cSpieler nicht gefunden!"
+  invalid-amount: "&cUngültige Anzahl!"
+  invalid-type: "&cUngültiger Booster-Typ!"
+  booster-activated: "&aDu hast den &6{type}&a-Booster aktiviert!"
+  booster-received: "&aDu hast &6{amount} {type}&a-Booster erhalten!"
+  booster-removed: "&cDir wurden &6{amount} {type}&c-Booster entfernt!"
+  booster-set: "&aDeine &6{type}&a-Booster wurden auf &6{amount}&a gesetzt!"
+  no-boosters: "&cDu hast keine &6{type}&c-Booster!"
+  booster-updated: "&aDeine Booster wurden aktualisiert!"
+  config-reloaded: "&aKonfiguration wurde neu geladen!"
+  not-enough-money: "&cDu hast nicht genug Geld!"
+  purchase-success: "&aDu hast &6{type}&a-Booster gekauft!"
+
