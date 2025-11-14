@@ -56,7 +56,7 @@ public class ShopGUI {
         lore.add("");
         
         int price = plugin.getConfigManager().getShopPrice(type.name().toLowerCase());
-        lore.add("§7Preis: §6" + price + " Coins");
+        lore.add("§7Preis: §6" + plugin.getEconomyManager().format(price));
         lore.add("");
         lore.add("§aLinksklick: §7Kaufen");
 

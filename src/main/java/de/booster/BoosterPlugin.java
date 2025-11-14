@@ -8,6 +8,7 @@ import de.booster.listeners.ExpChangeListener;
 import de.booster.listeners.GUIListener;
 import de.booster.managers.BoosterManager;
 import de.booster.managers.ConfigManager;
+import de.booster.managers.EconomyManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class BoosterPlugin extends JavaPlugin {
@@ -15,6 +16,7 @@ public class BoosterPlugin extends JavaPlugin {
     private static BoosterPlugin instance;
     private BoosterManager boosterManager;
     private ConfigManager configManager;
+    private EconomyManager economyManager;
 
     @Override
     public void onEnable() {
@@ -26,6 +28,7 @@ public class BoosterPlugin extends JavaPlugin {
         
         // Manager initialisieren
         boosterManager = new BoosterManager(this);
+        economyManager = new EconomyManager(this);
         
         // Commands registrieren
         getCommand("booster").setExecutor(new BoosterCommand(this));
@@ -58,6 +61,10 @@ public class BoosterPlugin extends JavaPlugin {
 
     public ConfigManager getConfigManager() {
         return configManager;
+    }
+
+    public EconomyManager getEconomyManager() {
+        return economyManager;
     }
 }
 

@@ -85,8 +85,27 @@ public class GUIListener implements Listener {
             BoosterType type = getBoosterTypeFromMaterial(clicked);
             
             if (type != null) {
-                // Hier könnte man eine Economy-Integration einbauen
-                // Für jetzt geben wir einfach einen Booster
+                int price = plugin.getConfigManager().getShopPrice(type.name().toLowerCase());
+                
+                // Economy prüfen
+                if (!plugin.getEconomyManager().isEnabled()) {
+                    player.sendMessage("§cEconomy ist nicht verfügbar! Bitte installiere Vault und ein Economy-Plugin.");
+                    return;
+                }
+                
+                // Prüfen ob Spieler genug Geld hat
+                if (!plugin.getEconomyManager().hasEnough(player, price)) {
+                    player.sendMessage(plugin.getConfigManager().getMessage("not-enough-money"));
+                    return;
+                }
+                
+                // Geld abziehen
+                if (!plugin.getEconomyManager().withdraw(player, price)) {
+                    player.sendMessage("§cFehler beim Kauf! Bitte versuche es erneut.");
+                    return;
+                }
+                
+                // Booster geben
                 boosterManager.addBooster(player.getUniqueId(), type, 1);
                 
                 String message = plugin.getConfigManager().getRawMessage("purchase-success")
