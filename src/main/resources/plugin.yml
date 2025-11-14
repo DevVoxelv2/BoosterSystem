@@ -2,7 +2,7 @@ name: BoosterPlugin
 version: '${project.version}'
 main: de.booster.BoosterPlugin
 api-version: 1.21
-author: BoosterDev
+author: DerGamer09
 description: Ein Plugin für Booster-Systeme
 
 commands:

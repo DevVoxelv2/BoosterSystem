@@ -1,6 +1,7 @@
 package de.booster.managers;
 
 import de.booster.BoosterPlugin;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class ConfigManager {
@@ -33,11 +34,13 @@ public class ConfigManager {
     public String getMessage(String key) {
         String prefix = config.getString("messages.prefix", "&8[&6Booster&8] &7");
         String message = config.getString("messages." + key, "");
-        return prefix + message;
+        String fullMessage = prefix + message;
+        return ChatColor.translateAlternateColorCodes('&', fullMessage);
     }
 
     public String getRawMessage(String key) {
-        return config.getString("messages." + key, "");
+        String message = config.getString("messages." + key, "");
+        return ChatColor.translateAlternateColorCodes('&', message);
     }
 }
 
